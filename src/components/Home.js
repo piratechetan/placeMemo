@@ -16,7 +16,7 @@ const STORAGE_KEY = '@storage_data'
 const Home = ({navigation}) => {
     const [data, setData] = useState("");
   const saveData = async () => {
-    const {data} = await Axios.get('https://api.flickr.com/services/rest/?method=flickr.photos.getRecent&per_page=100&page=1&api_key=6f102c62f41998d151e5a1b48713cf13&format=json&nojsoncallback=1&extras=url_s');
+    const {data} = await Axios.get('https://api.flickr.com/services/rest/?method=flickr.photos.getRecent&per_page=100&page=1&api_key=6f102c62f41998d151e5a1b48713cf13&format=json&nojsoncallback=true&extras=url_s');
     const details = JSON.stringify(data.photos.photo);
      await AsyncStorage.setItem(STORAGE_KEY, details)
     console.log('Data successfully saved')
@@ -25,9 +25,15 @@ const Home = ({navigation}) => {
 const readData = async () => {
   try {
     const data = await AsyncStorage.getItem(STORAGE_KEY)
-    if (data !== null) {
+    saveData();
+    const againData = await AsyncStorage.getItem(STORAGE_KEY)
+    if(data===againData){
       setData(JSON.parse(data))
     }
+    else{
+      setData(JSON.parse(againData))
+    }
+    
   } catch (e) {
     console.log('Failed to fetch the data from storage')
   }
