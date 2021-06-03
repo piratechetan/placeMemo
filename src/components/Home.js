@@ -6,31 +6,36 @@ import {
   StyleSheet,
   Text,
   useColorScheme,
-  View,FlatList,Dimensions,TouchableOpacity,Image,ImageBackground
+  View,FlatList,Dimensions,TouchableOpacity,Image,ImageBackground,
 } from 'react-native';
 
-
-import {Colors,} from 'react-native/Libraries/NewAppScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import Axios from 'axios'
-const Home = ({navigation}) => {
-    
-    const [data, setData] = useState("");
-    const fetchDetails = async () => {
-    try {
-      
-       const {data} = await Axios.get('https://api.flickr.com/services/rest/?method=flickr.photos.getRecent&per_page=1000&page=1&api_key=6f102c62f41998d151e5a1b48713cf13&format=json&nojsoncallback=1&extras=url_s');
-       
-       const details = data.photos.photo;
-          
-       setData(details);
+const STORAGE_KEY = '@storage_data'
 
-    } catch (error) {
-      console.log(error)
+const Home = ({navigation}) => {
+    const [data, setData] = useState("");
+  const saveData = async () => {
+    const {data} = await Axios.get('https://api.flickr.com/services/rest/?method=flickr.photos.getRecent&per_page=100&page=1&api_key=6f102c62f41998d151e5a1b48713cf13&format=json&nojsoncallback=1&extras=url_s');
+    const details = JSON.stringify(data.photos.photo);
+     await AsyncStorage.setItem(STORAGE_KEY, details)
+    console.log('Data successfully saved')
+  } 
+
+const readData = async () => {
+  try {
+    const data = await AsyncStorage.getItem(STORAGE_KEY)
+    if (data !== null) {
+      setData(JSON.parse(data))
     }
+  } catch (e) {
+    console.log('Failed to fetch the data from storage')
   }
-  useEffect(()=>{
-    fetchDetails()
-  }, [])
+}
+    
+useEffect(() => {
+  readData()
+}, [])
 
 const renderItem = ({ item }) => (
 
