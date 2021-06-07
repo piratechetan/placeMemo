@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
-import Feather from 'react-native-vector-icons/Feather';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {useNavigation} from '@react-navigation/native';
 import {
   Header,
@@ -13,37 +14,34 @@ import {
   Text,
   Input,
   Container,
+  Left,
 } from 'native-base';
 
-const CustomHeader = () => {
-  const buttonHandler = () => {
-    setSearch(current => !current);
-  };
+const CustomSearchSlider = () => {
   const navigation = useNavigation();
   return (
     <>
-      <Header
-        androidStatusBarColor="#0f4c75"
-        style={{
-          backgroundColor: '#0f4c75',
-        }}>
-        <Body>
-          <Title>PlaceMemo</Title>
-        </Body>
+      <Header translucent transparent>
+        <Left>
+          <TouchableOpacity
+            style={{marginLeft: 15, marginTop: 20}}
+            onPress={() => navigation.navigate('Search')}>
+            <AntDesign name="arrowleft" style={{color: '#fff'}} size={25} />
+          </TouchableOpacity>
+        </Left>
         <Right>
           <TouchableOpacity
-            style={{marginRight: 15}}
-            onPress={() => navigation.navigate('Search')}>
-            <Feather name="search" style={{color: '#fff'}} size={20} />
+            style={{marginRight: 15, marginBottom: 1}}
+            onPress={() => navigation.navigate('Image')}>
+            <EvilIcons name="star" style={{color: '#fff'}} size={25} />
           </TouchableOpacity>
-
           <TouchableOpacity
             style={{marginRight: 10}}
             onPress={() => navigation.openDrawer()}>
             <Entypo
               name="dots-three-vertical"
               style={{color: '#fff'}}
-              size={20}
+              size={25}
             />
           </TouchableOpacity>
         </Right>
@@ -67,4 +65,4 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 11,
   },
 });
-export default CustomHeader;
+export default CustomSearchSlider;
