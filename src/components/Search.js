@@ -75,9 +75,7 @@ const Search = ({navigation}) => {
           elevation: 1,
         }}>
         <View style={styles.input}>
-          <TouchableOpacity onPress={() => getSearch()}>
-            <Feather name="search" size={25} style={styles.inputIcon} />
-          </TouchableOpacity>
+          <Feather name="search" size={25} style={styles.inputIcon} />
 
           <Input
             placeholder="What You want to search"
