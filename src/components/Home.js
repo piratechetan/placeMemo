@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   Image,
   ImageBackground,
+  SectionList,
 } from 'react-native';
 import EmptyContainer from '../_layout/emptyContainer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -20,11 +21,11 @@ import Snackbar from 'react-native-snackbar';
 const STORAGE_KEY = '@storage_data';
 
 const Home = ({navigation}) => {
+  let datalist = [];
   const [store, setStore] = useState([]);
   const [isloading, setisloading] = useState(false);
   const [currentpage, setcurrentpage] = useState(1);
   useEffect(() => {
-    setisloading(true);
     saveData();
     return () => {};
   }, [currentpage]);
@@ -34,18 +35,10 @@ const Home = ({navigation}) => {
         'https://api.flickr.com/services/rest/?method=flickr.photos.getRecent&per_page=20&api_key=6f102c62f41998d151e5a1b48713cf13&format=json&nojsoncallback=true&extras=url_s&page=' +
           currentpage,
       );
-      if (JSON.stringify(store) != JSON.stringify(data.photos.photo)) {
-        const merging = store.concat(data.photos.photo);
-        const details = JSON.stringify(merging);
-        if (JSON.stringify(store) !== details) {
-          await AsyncStorage.setItem(STORAGE_KEY, details);
-          readData();
-          setisloading(false);
-        } else {
-          readData();
-          setisloading(false);
-        }
-      }
+      datalist.push(data.photos);
+      const details = JSON.stringify(datalist);
+      await AsyncStorage.setItem(STORAGE_KEY, details);
+      readData();
     } catch (error) {
       Snackbar.show({
         text: 'Something went wrong!',
@@ -57,9 +50,7 @@ const Home = ({navigation}) => {
 
   const readData = async () => {
     const files = await AsyncStorage.getItem(STORAGE_KEY);
-    console.log(store);
     setStore(JSON.parse(files));
-
     //   try {
     //     const data = await AsyncStorage.getItem(STORAGE_KEY)
     //     saveData();
@@ -110,25 +101,38 @@ const Home = ({navigation}) => {
 
   const handleMore = () => {
     setcurrentpage(currentpage + 1);
-    setisloading(true);
   };
 
+  const ReturnBack = () => {
+    setcurrentpage(currentpage - 1);
+  };
   return (
-    <SafeAreaView>
-      <View>
-        <FlatList
-          data={store}
-          numColumns={2}
-          showsVerticalScrollIndicator={false}
-          style={{margin: 2}}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
-          ListFooterComponent={renderFooter}
-          onEndReached={handleMore}
-          onEndReachedThreshold={0}
-        />
-      </View>
+    <SafeAreaView style={{flex: 1}}>
+      <FlatList
+        keyExtractor={(item, index) => index.toString()}
+        data={store}
+        horizontal
+        style={{flex: 1}}
+        renderItem={({item}) => (
+          <View style={{elevation: 1}}>
+            <View style={{backgroundColor: '#0f4c75', elevation: 1}}>
+              <Text style={{color: '#fff', alignSelf: 'center', fontSize: 25}}>
+                Page {item.page}
+              </Text>
+            </View>
+
+            <FlatList
+              data={item.photo}
+              numColumns={2}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={renderItem}
+            />
+          </View>
+        )}
+        onScrollEndDrag={handleMore}
+      />
     </SafeAreaView>
+    // />
   );
 };
 

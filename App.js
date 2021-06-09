@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -6,43 +6,45 @@ import {
   StyleSheet,
   Text,
   useColorScheme,
-  View,FlatList,Dimensions,TouchableOpacity,Image
+  View,
+  FlatList,
+  Dimensions,
+  TouchableOpacity,
+  Image,
 } from 'react-native';
-import AntDesign from 'react-native-vector-icons/AntDesign'
-import {Colors,} from 'react-native/Libraries/NewAppScreen';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 import MainStack from './src/mainStack';
-import {NavigationContainer} from '@react-navigation/native'
-import {createDrawerNavigator} from '@react-navigation/drawer'
+import {NavigationContainer} from '@react-navigation/native';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 
 const Drawer = createDrawerNavigator();
 
 const App = () => {
-    return(
-      <NavigationContainer>
+  return (
+    <NavigationContainer>
       <Drawer.Navigator
-     drawerStyle={{
-       width:70,
-       backgroundColor:'#0f4c75'
-     }}
-     drawerContentOptions={{
-       activeTintColor:'#fff',
-       inactiveTintColor:'grey'
-       
-     }}
-      
-      >
-        <Drawer.Screen name="Home" component={MainStack} options={
-          {
-            drawerIcon:({color})=>{
-              return(
-                <AntDesign name="home" size={30} color={color}/>
-              )
-            }
-          }
-        } />
+        drawerStyle={{
+          width: 70,
+          backgroundColor: '#0f4c75',
+        }}
+        drawerContentOptions={{
+          activeTintColor: '#fff',
+          inactiveTintColor: 'grey',
+        }}
+        sw>
+        <Drawer.Screen
+          name="Home"
+          component={MainStack}
+          options={{
+            swipeEnabled: false,
+            drawerIcon: ({color}) => {
+              return <AntDesign name="home" size={30} color={color} />;
+            },
+          }}
+        />
       </Drawer.Navigator>
-      </NavigationContainer>
-      
+    </NavigationContainer>
   );
 };
 
@@ -64,14 +66,10 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   image: {
-    width:Dimensions.get('screen').width/2,
-    height:Dimensions.get('screen').height/5,
-
-
-
-},
-flatListStyle: { flex: 1,
-},
+    width: Dimensions.get('screen').width / 2,
+    height: Dimensions.get('screen').height / 5,
+  },
+  flatListStyle: {flex: 1},
 });
 
 export default App;
